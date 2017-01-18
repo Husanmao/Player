@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MediaPlayer</string>
+    <string name="action_settings">Settings</string>
+    <string name="use_system_player">使用系统自带播放播放视频</string>
+    <string name="play_in_video_view">使用VideoView播放视频</string>
+    <string name="play_in_media_player">使用MediaPlayer播放视频</string>
+    <string name="versionCode">1.0</string>
+    <string name="versionName">init</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_media_player">MediaPlayerActivity</string>
+    <string name="stop">STOP</string>
+    <string name="play">PLAY</string>
+    <string name="reset">RESET</string>
+</resources>
