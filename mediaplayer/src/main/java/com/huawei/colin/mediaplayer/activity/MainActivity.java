@@ -1,4 +1,4 @@
-package com.huawei.colin.mediaplayer;
+package com.huawei.colin.mediaplayer.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,12 +16,21 @@ import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.huawei.colin.mediaplayer.R;
+import com.huawei.colin.mediaplayer.util.videofile.Video;
+import com.huawei.colin.mediaplayer.util.videofile.VideoProvider;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /** Three button for media playing */
     private Button btn_sys;
     private Button btn_video_view;
     private Button btn_media_player;
+
+    /** Video Provider  */
+    private VideoProvider mVideoProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Get the list of videoes we have
+        List<Video> mList = mVideoProvider.getList();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -103,7 +120,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

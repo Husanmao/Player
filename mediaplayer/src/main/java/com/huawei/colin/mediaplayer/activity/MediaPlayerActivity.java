@@ -1,4 +1,4 @@
-package com.huawei.colin.mediaplayer;
+package com.huawei.colin.mediaplayer.activity;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -15,6 +15,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.huawei.colin.mediaplayer.R;
 
 import java.io.File;
 import java.io.IOException;

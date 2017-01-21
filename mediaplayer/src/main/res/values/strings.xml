@@ -14,4 +14,10 @@
     <string name="stop">STOP</string>
     <string name="play">PLAY</string>
     <string name="reset">RESET</string>
+
+    <!-- for jie_video.xml -->
+    <string name="jievideolistfile">视频列表</string>
+    <string name="cont">内容</string>
+    <string name="title">标题</string>
+    <string name="time">时间</string>
 </resources>

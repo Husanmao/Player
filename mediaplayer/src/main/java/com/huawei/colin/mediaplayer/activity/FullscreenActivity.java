@@ -1,4 +1,4 @@
-package com.huawei.colin.mediaplayer;
+package com.huawei.colin.mediaplayer.activity;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.huawei.colin.mediaplayer.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -95,6 +99,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private void hide() {
         // Hide UI first
+        Button btn = (Button) findViewById(R.id.play);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
