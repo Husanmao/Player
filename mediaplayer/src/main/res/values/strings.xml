@@ -20,4 +20,6 @@
     <string name="cont">内容</string>
     <string name="title">标题</string>
     <string name="time">时间</string>
+
+    <string name="title_activity_jie_video_player">JieVideoPlayer</string>
 </resources>

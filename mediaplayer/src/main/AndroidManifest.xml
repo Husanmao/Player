@@ -33,6 +33,12 @@
         </activity>
         <activity android:name=".activity.JieVideo" >
         </activity>
+        <activity
+            android:name=".activity.JieVideoPlayer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_jie_video_player"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>

@@ -39,6 +39,10 @@ public class JieVideoListViewAdapter extends BaseAdapter{
         return photos.size();
     }
 
+    public void addPhoto(LoadedImage image) {
+        photos.add(image);
+    }
+
     @Override
     public Object getItem(int position) {
         return position;
