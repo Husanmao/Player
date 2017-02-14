@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:andriod="http://schemas.android.com/apk/res-auto"
     package="com.huawei.colin.mediaplayer"
     android:versionCode="@integer/versionCode"
-    android:versionName="@string/versionName" >
+    android:versionName="@string/versionName">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:maxSdkVersion="22"
+        android:targetSdkVersion="23"/>
 
     <application
         android:allowBackup="true"
@@ -39,6 +47,12 @@
             android:label="@string/title_activity_jie_video_player"
             android:theme="@style/FullscreenTheme" >
         </activity>
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

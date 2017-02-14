@@ -95,8 +95,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
+        startActivity(new Intent(MainActivity.this, JieVideo.class));
         // Get the list of videoes we have
-        List<Video> mList = mVideoProvider.getList();
+        //List<Video> mList = mVideoProvider.getList();
     }
 
     @Override

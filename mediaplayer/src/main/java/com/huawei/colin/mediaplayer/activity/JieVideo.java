@@ -2,14 +2,16 @@ package com.huawei.colin.mediaplayer.activity;
 
 import java.util.List;
 
+import wseemann.media.FFmpegMediaMetadataRetriever;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -39,7 +41,9 @@ public class JieVideo extends Activity {
         mInstance = this;
         AbstructProvider mAbstructProvider = new VideoProvider(mInstance);
         listVideos = mAbstructProvider.getList();
+        Log.d(TAG, "onCreate: lisVideos " + listVideos.get(0).getPath());
         videoSize = listVideos.size();
+        Log.d(TAG, "onCreate: vidoeSize is " + videoSize);
         mJieVideoListViewAdapter = new JieVideoListViewAdapter(this, listVideos);
         mJieVideoListView = (ListView) findViewById(R.id.jievideolistfile);
         mJieVideoListView.setAdapter(mJieVideoListViewAdapter);
@@ -55,6 +59,7 @@ public class JieVideo extends Activity {
             }
         });
 
+        Log.d(TAG, "onCreate: loadImages");
         loadImages();}
 
     /**
@@ -63,14 +68,17 @@ public class JieVideo extends Activity {
     private void loadImages() {
         final Object data = getLastNonConfigurationInstance();
         if (null == data) {
+            Log.d(TAG, "loadImages: data is null");
             new LoadImagesFromSDCard().execute();
         } else {
             final LoadedImage[] photos = (LoadedImage[]) data;
             if (photos.length == 0) {
+                Log.d(TAG, "loadImages: length is 0");
                  new LoadImagesFromSDCard().execute();
             }
 
             for (LoadedImage photo : photos) {
+                Log.d(TAG, "loadImages: add Image");
                 addImage(photo);
             }
         }
@@ -98,6 +106,7 @@ public class JieVideo extends Activity {
         final int count = grid.getChildCount();
         final LoadedImage[] list = new LoadedImage[count];
 
+        Log.d(TAG, "onRetainNonConfigurationInstance: count " + count);
         for (int i = 0; i < count; i++) {
             final ImageView v = (ImageView) grid.getChildAt(i);
             list[i] = new LoadedImage(((BitmapDrawable) v.getDrawable()).getBitmap());
@@ -107,16 +116,24 @@ public class JieVideo extends Activity {
     }
 
     /**
-     * Get the thumbnail pic
+     * Get the thumbnail pic: using FFmpegMediaMetadataRetriever
      * @param videoPath The path of the video
      * @param width The width of the video
      * @param kind The kind of the video
      * @return The thumbnail picture
      */
     private Bitmap getVideoThumbnail(String videoPath, int width, int height, int kind) {
-        Bitmap mBitmap = null;
-        mBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+        /*Bitmap mBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+        if (mBitmap == null) Log.d(TAG, "getVideoThumbnail: NULL");
         mBitmap = ThumbnailUtils.extractThumbnail(mBitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        if (mBitmap == null) Log.d(TAG, "getVideoThumbnail: NULL2");
+        return mBitmap;*/
+        FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+        mmr.setDataSource(videoPath);
+        mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM);
+        mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST);
+        Bitmap mBitmap = mmr.getFrameAtTime(2* 1000 * 1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
+        mmr.release();
         return mBitmap;
     }
 
@@ -124,18 +141,26 @@ public class JieVideo extends Activity {
 
         @Override
         protected Object doInBackground(Object... params) {
-            Bitmap mBitmap = null;
             for (int i = 0; i < videoSize; i++) {
-                mBitmap = getVideoThumbnail(listVideos.get(i).getPath(), 120, 120, MediaStore.Images.Thumbnails.MINI_KIND);
-                if (null != mBitmap) {
-                    publishProgress(new LoadedImage(mBitmap));
-                }
+                Log.d(TAG, "doInBackground : " + listVideos.get(i).getPath());
+//                try {
+//                    File mFile = new File(listVideos.get(i).getPath());
+                    Bitmap mBitmap = getVideoThumbnail(listVideos.get(i).getPath()/*mFile.getCanonicalPath()*/, 120, 120, MediaStore.Images.Thumbnails.MINI_KIND);
+                    if (null != mBitmap) {
+                        Log.d(TAG, "doInBackground: publishProgress");
+                        publishProgress(new LoadedImage(mBitmap));
+                    }
+//                } catch(IOException ioe) {
+//                    ioe.printStackTrace();
+//                }
+                Log.d(TAG, "doInBackground: mBitmap done");
             }
             return null;
         }
 
         @Override
         protected void onProgressUpdate(LoadedImage... values) {
+            Log.d(TAG, "onProgressUpdate: on progress update");
             addImage(values);
         }
     }

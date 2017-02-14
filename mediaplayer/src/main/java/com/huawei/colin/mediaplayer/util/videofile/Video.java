@@ -1,8 +1,15 @@
 package com.huawei.colin.mediaplayer.util.videofile;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
+import android.util.Log;
+
 import com.huawei.colin.mediaplayer.util.component.LoadedImage;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by Colin on 2017/1/22.
@@ -124,5 +131,28 @@ public class Video implements Serializable {
 
     public void setImage(LoadedImage image) {
         this.image = image;
+    }
+
+    public static Bitmap createVideoThumbnail(String url, int width, int height) {
+        Bitmap mBitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        int kind = MediaStore.Video.Thumbnails.MINI_KIND;
+        try {
+            retriever.setDataSource(url, new HashMap<String, String>());
+            mBitmap = retriever.getFrameAtTime();
+        } catch(RuntimeException e) {
+            Log.e(TAG, "createVideoThumbnail: ", e);
+        } finally {
+            try {
+                retriever.release();
+            } catch(RuntimeException re) {
+                Log.e(TAG, "createVideoThumbnail: ", re);
+            }
+        }
+
+        if (kind == MediaStore.Images.Thumbnails.MICRO_KIND && mBitmap != null) {
+            mBitmap = ThumbnailUtils.extractThumbnail(mBitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        }
+        return mBitmap;
     }
 }
