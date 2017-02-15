@@ -36,9 +36,9 @@
         android:layout_below="@id/play_in_video_view"
         android:text="@string/play_in_media_player"/>
 
-    <VideoView
+<!--    <VideoView
         android:id="@+id/video_view"
         android:layout_below="@id/play_in_media_player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" /> -->
 </RelativeLayout>

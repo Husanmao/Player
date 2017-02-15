@@ -1,5 +1,7 @@
 package com.huawei.colin.mediaplayer.activity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
@@ -8,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -123,18 +126,18 @@ public class JieVideo extends Activity {
      * @return The thumbnail picture
      */
     private Bitmap getVideoThumbnail(String videoPath, int width, int height, int kind) {
-        /*Bitmap mBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+        Bitmap mBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
         if (mBitmap == null) Log.d(TAG, "getVideoThumbnail: NULL");
         mBitmap = ThumbnailUtils.extractThumbnail(mBitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
         if (mBitmap == null) Log.d(TAG, "getVideoThumbnail: NULL2");
-        return mBitmap;*/
-        FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+        return mBitmap;
+        /*FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
         mmr.setDataSource(videoPath);
         mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM);
         mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST);
         Bitmap mBitmap = mmr.getFrameAtTime(2* 1000 * 1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
         mmr.release();
-        return mBitmap;
+        return mBitmap;*/
     }
 
     class LoadImagesFromSDCard extends AsyncTask<Object, LoadedImage, Object> {
@@ -143,16 +146,16 @@ public class JieVideo extends Activity {
         protected Object doInBackground(Object... params) {
             for (int i = 0; i < videoSize; i++) {
                 Log.d(TAG, "doInBackground : " + listVideos.get(i).getPath());
-//                try {
-//                    File mFile = new File(listVideos.get(i).getPath());
-                    Bitmap mBitmap = getVideoThumbnail(listVideos.get(i).getPath()/*mFile.getCanonicalPath()*/, 120, 120, MediaStore.Images.Thumbnails.MINI_KIND);
+                try {
+                    File mFile = new File(listVideos.get(i).getPath());
+                    Bitmap mBitmap = getVideoThumbnail(mFile.getCanonicalPath(), 120, 120, MediaStore.Images.Thumbnails.MINI_KIND);
                     if (null != mBitmap) {
                         Log.d(TAG, "doInBackground: publishProgress");
                         publishProgress(new LoadedImage(mBitmap));
                     }
-//                } catch(IOException ioe) {
-//                    ioe.printStackTrace();
-//                }
+                } catch(IOException ioe) {
+                    ioe.printStackTrace();
+                }
                 Log.d(TAG, "doInBackground: mBitmap done");
             }
             return null;

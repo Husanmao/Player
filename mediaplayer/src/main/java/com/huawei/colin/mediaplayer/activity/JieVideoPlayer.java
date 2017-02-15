@@ -3,7 +3,7 @@ package com.huawei.colin.mediaplayer.activity;
 import java.io.File;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import android.widget.VideoView;
 
 import com.huawei.colin.mediaplayer.R;
 import com.huawei.colin.mediaplayer.util.videofile.Video;
+import com.huawei.colin.mediaplayer.view.MyVideoView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -49,18 +50,27 @@ public class JieVideoPlayer extends AppCompatActivity {
     private View mControlsView;
     private boolean mVisible;
 
-    private io.vov.vitamio.widget.VideoView mVideoView;
-    private io.vov.vitamio.widget.MediaController mMediaController;;
-
     private Video mVideo;
+    private io.vov.vitamio.widget.VideoView mVideoView;
+    private io.vov.vitamio.widget.MediaController mMediaController;
+
+    private MyVideoView videoView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this)) return;
         setContentView(R.layout.activity_jie_video_player);
         mVideoView = (io.vov.vitamio.widget.VideoView) findViewById(R.id.surface_view);
+        videoView = (MyVideoView) this.findViewById(R.id.video_view);
         mMediaController = new io.vov.vitamio.widget.MediaController(this);
         mMediaController.show(5000);
+/*        mVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
         mVideoView.setMediaController(mMediaController);
         mVideoView.setVideoQuality(io.vov.vitamio.MediaPlayer.VIDEOQUALITY_HIGH);
         mVideoView.requestFocus();
@@ -89,15 +99,34 @@ public class JieVideoPlayer extends AppCompatActivity {
         File file = new File(mVideo.getPath());
         if (file.isFile() && file.exists() && file.canRead()) {
             String path = file.getPath();
-            //String type = getMIMEType(file);
+//            String type = getMIMEType(file);
 
             //play the video we get
-            //playBySystemPlayer(path, type);
+//            playBySystemPlayer(path, type);
 
-//            playByVideoView(path);
-            mVideoView.setVideoPath(path);
-            mVideoView.start();
+            playByVideoView(path);
+//            mVideoView.setVideoPath(path);
+//            mVideoView.start();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+//        videoView.suspend();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy");
+//        videoView.stopPlayback();
     }
 
     /**
@@ -115,7 +144,12 @@ public class JieVideoPlayer extends AppCompatActivity {
 
     private void playByVideoView(String path) {
         Uri uri = Uri.parse(path);
-        VideoView videoView = (VideoView) this.findViewById(R.id.video_view);
+        videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         videoView.setMediaController(new MediaController(this));
         videoView.setVideoURI(uri);
         videoView.start();
@@ -138,7 +172,7 @@ public class JieVideoPlayer extends AppCompatActivity {
         }
     /* 获取文件的后缀名 */
         String end=fName.substring(dotIndex,fName.length()).toLowerCase();
-        if(end=="")return type;
+        if(end == "")return type;
         //在MIME和文件类型的匹配表中找到对应的MIME类型。
         for(int i=0;i<MIME_MapTable.length;i++){
             if(end.equals(MIME_MapTable[i][0]))
